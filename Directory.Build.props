@@ -1,0 +1,40 @@
+<Project>
+  <!-- 
+    Arquivo de configuração global para todos os projetos da solution.
+    Define propriedades comuns que serão aplicadas a todos os projetos.
+  -->
+  
+  <PropertyGroup>
+    <!-- 
+      Define a versão do C# a ser utilizada em todos os projetos.
+      "preview" é necessário para usar recursos do C# 14, pois o .NET 10 está em preview.
+      Quando o .NET 10 for lançado oficialmente, pode-se usar "14" ou "latest".
+    -->
+    <LangVersion>preview</LangVersion>
+    
+    <!-- 
+      Define o framework de destino padrão como .NET 10.
+      Pode ser sobrescrito em projetos individuais se necessário.
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    
+    <!-- 
+      Habilita tipos de referência anuláveis (nullable reference types).
+      Essa funcionalidade ajuda a evitar erros de referência nula em tempo de compilação.
+    -->
+    <Nullable>enable</Nullable>
+    
+    <!-- 
+      Trata avisos como erros para garantir qualidade do código.
+      Descomente a linha abaixo se desejar ativar essa funcionalidade.
+    -->
+    <!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
+    
+    <!-- 
+      Habilita análise implícita de usings para reduzir código boilerplate.
+      Remove a necessidade de declarar usings comuns em cada arquivo.
+    -->
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
