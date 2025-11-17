@@ -1,0 +1,6 @@
+@CatalogoDeMidia.Api_HostAddress = http://localhost:5229
+
+GET {{CatalogoDeMidia.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
