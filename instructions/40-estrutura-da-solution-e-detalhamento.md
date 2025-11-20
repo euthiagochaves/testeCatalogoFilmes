@@ -159,7 +159,7 @@ Classes principais:
    - Método:
      - `public static IServiceCollection AdicionarInfraestrutura(this IServiceCollection services, string connectionString)`
    - Deve:
-     - Registrar `CatalogoDeMidiaDbContext` para uso com SQLite;
+     - Registrar `CatalogoDeMidiaDbContext` para uso com PostgreSQL (Supabase) via Npgsql;
      - Registrar `IMidiaRepositorio` como implementação de `MidiaRepositorio`.
 
 ### Projeto CatalogoDeMidia.Api
@@ -186,7 +186,7 @@ Elementos principais (caso MVC/API tradicional):
    - Configuração:
      - `Host.CreateDefaultBuilder(args)` ou equivalente em .NET 10.
      - Registrar serviços da Aplicacao e Infraestrutura.
-     - Configurar conexão SQLite (connection string).
+     - Configurar conexão PostgreSQL do Supabase (connection string).
      - Habilitar Swagger.
      - Mapear controladores / endpoints.
 
