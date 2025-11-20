@@ -7,7 +7,7 @@ O projeto **CatalogoDeMidia.McpServer** é responsável por:
 - Implementar um **servidor MCP** em .NET 10;
 - Disponibilizar tools para o GitHub Copilot (e/ou outros clientes MCP compatíveis);
 - Traduzir solicitações em linguagem natural, vindas do chat de IA, em chamadas aos casos de uso da solução;
-- Utilizar a mesma base de dados SQLite que a API.
+- Utilizar a mesma base de dados PostgreSQL remoto no (Supabase) que a API.
 
 Este projeto é **obrigatório** e é o ponto central para testes com IA + MCP.
 
