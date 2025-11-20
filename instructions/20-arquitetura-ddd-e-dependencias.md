@@ -122,8 +122,8 @@ Dependências:
 Responsabilidades:
 
 - Implementar as interfaces de repositório definidas no domínio.
-- Configurar o **DbContext** do Entity Framework Core para SQLite.
-- Configurar migrações e criação de banco.
+- Configurar o **DbContext** do Entity Framework Core para PostgreSQL remoto no (Supabase).
+- Configurar migrações e aplicação do schema no banco PostgreSQL remoto no (Supabase).
 - Fornecer métodos de extensão de DI para registrar repositórios e contexto.
 
 Elementos principais:
