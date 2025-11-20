@@ -26,13 +26,14 @@ O foco principal NÃO é apenas o CRUD em si, mas:
    - Separar responsabilidades em projetos distintos:
      - Dominio (regra de negócio);
      - Aplicacao (casos de uso);
-     - Infraestrutura (acesso a dados, SQLite);
+     - Infraestrutura (acesso a dados via EF Core com PostgreSQL remoto no Supabase);
      - Api (exposição HTTP para consumo tradicional);
      - McpServer (exposição das tools MCP para o Copilot).
 
-3. **Persistência local usando SQLite**:
-   - Banco de dados SQLite armazenado localmente em arquivo;
-   - Modelo relacional simples, mas bem definido, para mídia (filmes/séries).
+3. **Persistência remota usando PostgreSQL no Supabase**:
+   - Banco de dados PostgreSQL remoto provisionado no Supabase; não existe arquivo local de banco.
+   - Modelo relacional simples, mas bem definido, para mídia (filmes/séries), criado e evoluído via migrations do EF Core aplicadas no Postgres do Supabase.
+   - A Infraestrutura deve acessar o banco via `CatalogoDeMidiaDbContext` configurado com provider Npgsql (`UseNpgsql`) e connection string do Supabase.
 
 ## Funcionalidades principais
 
@@ -84,4 +85,3 @@ O **MCP Server** deverá expor tools com nomes e contratos bem definidos, de for
 - Interfaces devem seguir o padrão de prefixo `I` (ex.: `IMidiaRepositorio`, `IAdicionarMidiaUseCase`).
 - Entidades de domínio devem usar nomes substantivos no singular (ex.: `Midia`).
 - Casos de uso devem usar o padrão `<Verbo><Entidade>UseCase` (ex.: `AdicionarMidiaUseCase`, `ListarMidiasUseCase`, `AvaliarMidiaUseCase`).
-
