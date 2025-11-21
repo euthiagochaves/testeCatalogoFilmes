@@ -42,8 +42,8 @@ public static class ConfiguracaoInfraestruturaExtensoes
         {
             options.UseNpgsql(connectionString, npgsqlOptions =>
             {
-                // Configurações específicas do Npgsql, se necessário
-                // Por exemplo: npgsqlOptions.MigrationsAssembly("CatalogoDeMidia.Infraestrutura");
+                // Definir o assembly onde as migrations estão localizadas
+                npgsqlOptions.MigrationsAssembly("CatalogoDeMidia.Infraestrutura");
             });
         });
 
