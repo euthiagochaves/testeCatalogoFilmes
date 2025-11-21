@@ -164,8 +164,8 @@ public class ListarMidiasUseCase : IListarMidiasUseCase
                 : midias.OrderByDescending(m => m.AnoLancamento),
 
             "nota" => filtros.OrdenacaoAscendente
-                ? midias.OrderBy(m => m.Nota ?? 0)
-                : midias.OrderByDescending(m => m.Nota ?? 0),
+                ? midias.OrderBy(m => m.Nota ?? 0) // Notas nulas são tratadas como 0
+                : midias.OrderByDescending(m => m.Nota ?? 0), // Notas nulas são tratadas como 0
 
             "datacriacao" => filtros.OrdenacaoAscendente
                 ? midias.OrderBy(m => m.DataCriacao)
