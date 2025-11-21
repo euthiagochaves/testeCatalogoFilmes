@@ -1,47 +1,31 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CatalogoDeMidia.Aplicacao;
+using CatalogoDeMidia.Infraestrutura.Persistencia.Configuracoes;
+using CatalogoDeMidia.McpServer.Ferramentas;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ModelContextProtocol.Server;
 
-// Criar o host genérico para o servidor MCP
-var builder = Host.CreateDefaultBuilder(args);
+// Criar o host genérico para o servidor MCP usando .NET 10
+var builder = Host.CreateApplicationBuilder(args);
 
-builder.ConfigureServices((context, services) =>
-{
-    // Configurar logging
-    services.AddLogging(logging =>
-    {
-        logging.ClearProviders();
-        logging.AddConsole();
-        logging.SetMinimumLevel(LogLevel.Information);
-    });
+// Configurar logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
-    // TODO: Registrar serviços da camada de Aplicação (casos de uso)
-    // Exemplo: services.AddScoped<IAdicionarMidiaUseCase, AdicionarMidiaUseCase>();
-    // Exemplo: services.AddScoped<IListarMidiasUseCase, ListarMidiasUseCase>();
-    // Exemplo: services.AddScoped<IAvaliarMidiaUseCase, AvaliarMidiaUseCase>();
+// Registrar serviços da camada de Infraestrutura (DbContext, repositórios)
+builder.Services.AdicionarInfraestrutura(builder.Configuration);
 
-    // TODO: Registrar serviços da camada de Infraestrutura (DbContext, repositórios)
-    // Utilizar a mesma configuração da API para reutilizar código
-    // Exemplo: services.AdicionarInfraestrutura(connectionString);
-    // Connection string para SQLite: "Data Source=catalogodemidia.db"
+// Registrar serviços da camada de Aplicação (casos de uso)
+builder.Services.AdicionarAplicacao();
 
-    // TODO: Registrar o servidor MCP e as ferramentas (tools)
-    // Será implementado quando integrar com a biblioteca MCP
-    // Exemplo: services.AddMcpServer();
-    // Exemplo: services.AddSingleton<FerramentasCatalogoDeMidia>();
-});
+// Configurar o servidor MCP
+builder.Services.AddMcpServer()
+    .WithStdioServerTransport()
+    .WithToolsFromAssembly(typeof(FerramentasCatalogoDeMidia).Assembly);
 
 var host = builder.Build();
 
-// TODO: Inicializar o servidor MCP
-// O servidor MCP escutará requisições via stdin/stdout (protocolo JSON-RPC)
-// e despachará para as ferramentas (tools) registradas:
-// - adicionar_midia
-// - listar_midias
-// - avaliar_midia
-
-Console.WriteLine("CatalogoDeMidia.McpServer iniciando...");
-Console.WriteLine("TODO: Implementar protocolo MCP e registro de ferramentas");
-
-// await host.RunAsync();
-Console.WriteLine("Servidor MCP placeholder - implementação futura");
+// Executar o host - o servidor MCP escutará requisições via stdin/stdout
+await host.RunAsync();
