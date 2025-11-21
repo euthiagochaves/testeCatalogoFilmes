@@ -46,7 +46,7 @@ public class MidiasController : ControllerBase
         CancellationToken cancellationToken)
     {
         var resultado = await _adicionarMidiaUseCase.ExecutarAsync(requisicao, cancellationToken);
-        return CreatedAtAction(nameof(Adicionar), new { id = resultado.Id }, resultado);
+        return StatusCode(StatusCodes.Status201Created, resultado);
     }
 
     /// <summary>
@@ -81,8 +81,13 @@ public class MidiasController : ControllerBase
         [FromBody] AvaliarMidiaRequisicaoDto requisicao,
         CancellationToken cancellationToken)
     {
-        requisicao.IdMidia = id;
-        var resultado = await _avaliarMidiaUseCase.ExecutarAsync(requisicao, cancellationToken);
+        var requisicaoComId = new AvaliarMidiaRequisicaoDto
+        {
+            IdMidia = id,
+            NovaNota = requisicao.NovaNota,
+            Titulo = requisicao.Titulo
+        };
+        var resultado = await _avaliarMidiaUseCase.ExecutarAsync(requisicaoComId, cancellationToken);
         return Ok(resultado);
     }
 }
