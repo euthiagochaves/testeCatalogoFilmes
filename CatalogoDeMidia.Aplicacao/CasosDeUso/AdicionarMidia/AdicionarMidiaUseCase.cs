@@ -69,7 +69,7 @@ public class AdicionarMidiaUseCase : IAdicionarMidiaUseCase
 
         if (string.IsNullOrWhiteSpace(requisicao.Titulo))
         {
-            throw new ArgumentException("O título da mídia é obrigatório.", nameof(requisicao.Titulo));
+            throw new ArgumentException("O título da mídia é obrigatório.", nameof(requisicao));
         }
     }
 
