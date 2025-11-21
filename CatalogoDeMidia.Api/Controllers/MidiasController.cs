@@ -45,8 +45,20 @@ public class MidiasController : ControllerBase
         [FromBody] AdicionarMidiaRequisicaoDto requisicao,
         CancellationToken cancellationToken)
     {
-        var resultado = await _adicionarMidiaUseCase.ExecutarAsync(requisicao, cancellationToken);
-        return StatusCode(StatusCodes.Status201Created, resultado);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            var resultado = await _adicionarMidiaUseCase.ExecutarAsync(requisicao, cancellationToken);
+            return StatusCode(StatusCodes.Status201Created, resultado);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
@@ -57,12 +69,20 @@ public class MidiasController : ControllerBase
     /// <returns>Lista de mídias que atendem aos critérios especificados.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<MidiaRespostaDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IReadOnlyList<MidiaRespostaDto>>> Listar(
         [FromQuery] ListarMidiasRequisicaoDto requisicao,
         CancellationToken cancellationToken)
     {
-        var resultado = await _listarMidiasUseCase.ExecutarAsync(requisicao, cancellationToken);
-        return Ok(resultado);
+        try
+        {
+            var resultado = await _listarMidiasUseCase.ExecutarAsync(requisicao, cancellationToken);
+            return Ok(resultado);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
@@ -72,7 +92,7 @@ public class MidiasController : ControllerBase
     /// <param name="requisicao">Dados da avaliação.</param>
     /// <param name="cancellationToken">Token de cancelamento para operações assíncronas.</param>
     /// <returns>Mídia com a avaliação atualizada.</returns>
-    [HttpPost("{id:guid}/avaliacoes")]
+    [HttpPost("{id:guid}/avaliar")]
     [ProducesResponseType(typeof(MidiaRespostaDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -81,13 +101,31 @@ public class MidiasController : ControllerBase
         [FromBody] AvaliarMidiaRequisicaoDto requisicao,
         CancellationToken cancellationToken)
     {
-        var requisicaoComId = new AvaliarMidiaRequisicaoDto
+        if (!ModelState.IsValid)
         {
-            IdMidia = id,
-            NovaNota = requisicao.NovaNota,
-            Titulo = requisicao.Titulo
-        };
-        var resultado = await _avaliarMidiaUseCase.ExecutarAsync(requisicaoComId, cancellationToken);
-        return Ok(resultado);
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            var requisicaoComId = new AvaliarMidiaRequisicaoDto
+            {
+                IdMidia = id,
+                NovaNota = requisicao.NovaNota,
+                Titulo = requisicao.Titulo
+            };
+            var resultado = await _avaliarMidiaUseCase.ExecutarAsync(requisicaoComId, cancellationToken);
+            return Ok(resultado);
+        }
+        catch (ArgumentException ex)
+        {
+            // Verifica se o erro é de mídia não encontrada para retornar 404
+            if (ex.Message.Contains("não encontrada", StringComparison.OrdinalIgnoreCase))
+            {
+                return NotFound(ex.Message);
+            }
+            // Outros erros de validação retornam 400
+            return BadRequest(ex.Message);
+        }
     }
 }
